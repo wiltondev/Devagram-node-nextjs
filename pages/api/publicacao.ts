@@ -106,9 +106,13 @@ const handler = nc()
 })
  .put(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
     try {
-      const { publicacaoId } = req.query;
+      const {userId, publicacaoId } = req.query;
 
-      const userId = req?.query?.userId;
+      const usuario = await UsuarioModel.findById(userId);
+
+      if(!usuario){
+        return res.status(400).json({erro : 'Usuario nao encontrado'});
+      }
 
 
       const publicacao = await PublicacaoModel.findOne({
