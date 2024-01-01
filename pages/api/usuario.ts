@@ -8,7 +8,7 @@ import {updload, uploadImagemCosmic} from '../../services/uploadImagemCosmic';
 import { politicaCORS } from '../../middlewares/politicaCORS';
 
 const handler = nc()
-    .use(updload.single('file'))
+    .use(updload.single('avatar'))
     .put(async(req : any, res : NextApiResponse<RespostaPadraoMsg>) => {
         try{
             const {userId} = req?.query;
@@ -23,8 +23,8 @@ const handler = nc()
                 usuario.nome = nome;
             }
 
-            const {file} = req;
-            if(file && file.originalname){
+            const {avatar} = req;
+            if(avatar && avatar.originalname){
                 const image = await uploadImagemCosmic(req);
                 if(image && image.media && image.media.url){
                     usuario.avatar = image.media.url;
@@ -34,7 +34,7 @@ const handler = nc()
             await UsuarioModel
                 .findByIdAndUpdate({_id : usuario._id}, usuario);
 
-            return res.status(200).json({msg : 'Usuario alterado com sucesos'});
+            return res.status(200).json({msg : 'Usuario alterado com sucesso!'});
         }catch(e){
             console.log(e);
             return res.status(400).json({erro : 'Nao foi possivel atualizar usuario:' + e});
