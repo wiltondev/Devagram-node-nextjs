@@ -9,7 +9,7 @@
     "routes": [
       {
         "src": "/api/publicacao",
-        "methods": ["GET", "POST", "PUT"],
+        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
         "headers": {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET, POST, PUT",
