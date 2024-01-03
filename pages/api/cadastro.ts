@@ -7,7 +7,7 @@ import md5 from 'md5';
 import {updload, uploadImagemCosmic} from '../../services/uploadImagemCosmic';
 import nc from 'next-connect';
 import { politicaCORS } from '../../middlewares/politicaCORS';
-import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
+
 
 const handler = nc()
     .use(updload.single('avatar'))

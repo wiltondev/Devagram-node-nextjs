@@ -62,7 +62,7 @@ const endpointSeguir =
         return res.status(405).json({erro : 'Metodo informado nao existe'});
     }catch(e){
         console.log(e);
-        return res.status(500).json({erro : 'Nao foi possivel seguir/deseguir o usuario informado'});
+        return res.status(500).json({erro : 'Nao foi possivel seguir/desseguir o usuario informado'});
     }
 }
 
