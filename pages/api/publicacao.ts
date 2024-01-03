@@ -1,7 +1,7 @@
 import sharp from 'sharp';
-import type {NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import type { RespostaPadraoMsg } from '../../types/RespostaPadraoMsg';
-import  nc  from "next-connect";
+import nc from "next-connect";
 import { updload, uploadImagemCosmic, bucketDevagram } from '../../services/uploadImagemCosmic';
 import { conectarMongoDB } from '../../middlewares/conectarMongoDB';
 import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
@@ -201,4 +201,4 @@ export const config = {
   }
 }
 
-export default validarTokenJWT(conectarMongoDB(handler));
+export default politicaCORS(validarTokenJWT(conectarMongoDB(handler)));
