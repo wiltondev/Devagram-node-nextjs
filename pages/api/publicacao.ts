@@ -7,7 +7,6 @@ import { conectarMongoDB } from '../../middlewares/conectarMongoDB';
 import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
 import { PublicacaoModel } from '../../models/PublicacaoModel';
 import { UsuarioModel } from '../../models/UsuarioModel';
-import { politicaCORS } from '../../middlewares/politicaCORS';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 import { Readable } from "stream";
 
@@ -201,4 +200,4 @@ export const config = {
   }
 }
 
-export default politicaCORS(validarTokenJWT(conectarMongoDB(handler)));
+export default validarTokenJWT(conectarMongoDB(handler));
