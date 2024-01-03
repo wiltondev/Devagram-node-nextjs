@@ -15,7 +15,7 @@ import { Readable } from "stream";
 
 const handler = nc()
   .use(updload.single('file'))
-  .patch(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
+  .put(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
     try {
       const { userId } = req.query;
       const usuario = await UsuarioModel.findById(userId);
