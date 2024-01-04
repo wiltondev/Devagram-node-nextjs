@@ -12,7 +12,7 @@ const bucketDevagram = createBucketClient({
 
 const storage = multer.memoryStorage();
 
-const updload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 const uploadImagemCosmic = async (req: any) => {
     if (req?.file?.originalname) {
@@ -36,4 +36,4 @@ const uploadImagemCosmic = async (req: any) => {
     }
 }
 
-export { updload, uploadImagemCosmic, bucketDevagram };
+export { upload, uploadImagemCosmic, bucketDevagram };
