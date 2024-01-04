@@ -57,17 +57,17 @@ const handler = nc()
 
     .put(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
         try {
-            const { publicationId } = req.query;
-            const { descricao, imagemUrl } = req.body;
+            const { publicacaoId } = req.query;
+            const { descricao, file } = req.body;
 
             // Adicione validação para a descrição ou URL da imagem, se necessário.
 
             const updatedData: { descricao?: string; foto?: string } = {};
             if (descricao) updatedData.descricao = descricao;
-            if (imagemUrl) updatedData.foto = imagemUrl;
+            if (file) updatedData.foto = file;
 
-            const publication = await PublicacaoModel.findByIdAndUpdate(publicationId, updatedData, { new: true });
-            if (!publication) {
+            const publicacao= await PublicacaoModel.findByIdAndUpdate(publicacaoId, updatedData, { new: true });
+            if (!publicacao) {
                 return res.status(404).json({ erro: 'Publicação não encontrada' });
             }
 
@@ -80,16 +80,16 @@ const handler = nc()
 
     .delete(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
         try {
-            const { publicationId } = req.query;
+            const { publicacaoId } = req.query;
 
             // Execute a operação de exclusão
-            const publication = await PublicacaoModel.findByIdAndDelete(publicationId);
-            if (!publication) {
+            const publicacao = await PublicacaoModel.findByIdAndDelete(publicacaoId);
+            if (!publicacao) {
                 return res.status(404).json({ erro: 'Publicação não encontrada' });
             }
 
             // Atualize a contagem de publicações do usuário, se necessário
-            await UsuarioModel.findByIdAndUpdate(publication.idUsuario, { $inc: { publicacoes: -1 } });
+            await UsuarioModel.findByIdAndUpdate(publicacao.idUsuario, { $inc: { publicacoes: -1 } });
 
             return res.status(200).json({ msg: 'Publicação deletada com sucesso' });
         } catch (e) {

@@ -4,11 +4,11 @@ import {validarTokenJWT} from '../../middlewares/validarTokenJWT';
 import {conectarMongoDB} from '../../middlewares/conectarMongoDB';
 import { UsuarioModel } from '../../models/UsuarioModel';
 import nc from 'next-connect';
-import {updload, uploadImagemCosmic} from '../../services/uploadImagemCosmic';
+import {upload, uploadImagemCosmic} from '../../services/uploadImagemCosmic';
 import { politicaCORS } from '../../middlewares/politicaCORS';
 
 const handler = nc()
-    .use(updload.single('avatar'))
+    .use(upload.single('avatar'))
     .put(async(req : any, res : NextApiResponse<RespostaPadraoMsg>) => {
         try{
             const {userId} = req?.query;
