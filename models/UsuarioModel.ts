@@ -8,6 +8,7 @@ interface Usuario extends Document {
     seguidores: number;
     seguindo: number;
     publicacoes: number;
+    reel: number;
 }
 
 const UsuarioSchema = new Schema<Usuario>({
@@ -18,6 +19,8 @@ const UsuarioSchema = new Schema<Usuario>({
     seguidores: { type: Number, default: 0 },
     seguindo: { type: Number, default: 0 },
     publicacoes: { type: Number, default: 0 },
+    reel: { type: Number, default: 0 },
+
 });
 
 export const UsuarioModel = mongoose.models.usuarios || mongoose.model<Usuario>('usuarios', UsuarioSchema);

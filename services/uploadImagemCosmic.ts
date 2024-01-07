@@ -18,6 +18,7 @@ const uploadImagemCosmic = async (req: any) => {
     if (req?.file?.originalname) {
         const media_object = req.file;
         
+        
 
 
         if (req.url && req.url.includes('publicacao')) {
@@ -29,6 +30,11 @@ const uploadImagemCosmic = async (req: any) => {
             return await bucketDevagram.media.insertOne({
                 media: media_object,
                 folder: "avatar",
+            });
+        } else if (req.url && req.url.includes('reels')) {
+            return await bucketDevagram.media.insertOne({
+                media: media_object,
+                folder: "reels",
             });
         
         }
