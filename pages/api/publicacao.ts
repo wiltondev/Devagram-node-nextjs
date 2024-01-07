@@ -7,6 +7,10 @@ import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
 import { PublicacaoModel } from '../../models/PublicacaoModel';
 import { UsuarioModel } from '../../models/UsuarioModel';
 import { politicaCORS } from '../../middlewares/politicaCORS';
+import multer from 'multer';
+import fileType from 'file-type';
+import mime from 'mime-types';
+
 
 const handler = nc()
     .use(upload.single('file')) // Corrigi o nome da função de upload
@@ -30,9 +34,13 @@ const handler = nc()
 
             const { file } = req;
 
-            if (!file || !file.originalname) { // Corrigi a verificação do arquivo
-                return res.status(400).json({ erro: 'Imagem é obrigatória' });
+            const mimeType = mime.lookup(file.originalname);
+
+            if (!mimeType || !['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'].includes(mimeType)) {
+                return res.status(400).json({ erro: 'Apenas imagens são permitidas (jpg, png, gif).' });
             }
+
+
 
             const image = await uploadImagemCosmic(req);
             const publicacao = {
@@ -66,7 +74,7 @@ const handler = nc()
             if (descricao) updatedData.descricao = descricao;
             if (file) updatedData.foto = file;
 
-            const publicacao= await PublicacaoModel.findByIdAndUpdate(publicacaoId, updatedData, { new: true });
+            const publicacao = await PublicacaoModel.findByIdAndUpdate(publicacaoId, updatedData, { new: true });
             if (!publicacao) {
                 return res.status(404).json({ erro: 'Publicação não encontrada' });
             }
