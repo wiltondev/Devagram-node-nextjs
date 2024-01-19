@@ -1,13 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface Reels extends Document {
-    _id: string; // ID da publicação
-    idUsuario: string; // ID do usuário que publicou
-    descricao: string; // Descrição da publicação
-    url: string; // URL da mídia (imagem ou vídeo)
-    data: Date; // Data da publicação
-    comentarios: { nome: string; comentario: string }[]; // Array de comentários
-    likes: string[]; // Array de IDs de usuários que curtiram
+    
+    idUsuario: string;
+    descricao: string;
+    url: string;
+    data: Date;
 }
 
 const ReelsSchema = new Schema({
