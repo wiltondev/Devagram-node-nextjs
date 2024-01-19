@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface Reels extends Document {
+    
     _id: string; // ID da publicação
     idUsuario: string; // ID do usuário que publicou
     descricao: string; // Descrição da publicação

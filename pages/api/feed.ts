@@ -8,6 +8,15 @@ import { SeguidorModel } from '../../models/SeguidorModel';
 import { politicaCORS } from '../../middlewares/politicaCORS';
 import { ReelsModel } from '../../models/ReelsModel';
 
+const processarItem = async (item, isVideo) => {
+    const usuarioDaPublicacao = await UsuarioModel.findById(item.idUsuario);
+    return usuarioDaPublicacao ? {
+        ...item._doc,
+        usuario: { nome: usuarioDaPublicacao.nome, avatar: usuarioDaPublicacao.avatar },
+        isVideo,
+    } : null;
+};
+
 const feedEndpoint = async (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg | any>) => {
     try {
         if (req.method === 'GET') {
@@ -21,62 +30,17 @@ const feedEndpoint = async (req: NextApiRequest, res: NextApiResponse<RespostaPa
             const seguidores = await SeguidorModel.find({ usuarioId: usuarioLogado._id });
             const seguidoresIds = seguidores.map(s => s.usuarioSeguidoId);
 
-            const publicacoes = await PublicacaoModel.find({
-                $or: [
-                    { idUsuario: usuarioLogado._id },
-                    { idUsuario: seguidoresIds }
-                ]
-            })
+            const [publicacoes, reels] = await Promise.all([
+                PublicacaoModel.find({ idUsuario: { $in: [...seguidoresIds, usuarioLogado._id] } }),
+                ReelsModel.find({ idUsuario: { $in: [...seguidoresIds, usuarioLogado._id] } }),
+            ]);
 
+            const result = await Promise.all([
+                ...publicacoes.map(publicacao => processarItem(publicacao, false)),
+                ...reels.map(reel => processarItem(reel, true)),
+            ]);
 
-
-            const reels = await ReelsModel.find({
-                $or: [
-                    { idUsuario: usuarioLogado._id },
-                    { idUsuario: seguidoresIds }
-                ]
-            })
-
-
-
-            const result = [];
-            for (const publicacao of publicacoes) {
-                const usuarioDaPublicacao = await UsuarioModel.findById(publicacao.idUsuario);
-                if (usuarioDaPublicacao) {
-                    const final = {
-                        ...publicacao._doc, usuario: {
-                            nome: usuarioDaPublicacao.nome,
-                            avatar: usuarioDaPublicacao.avatar,
-
-
-                        },
-                        isVideo: false,
-
-                    };
-                    result.push(final);
-                }
-            }
-
-            for (const reel of reels) {
-                const usuarioDaPublicacao = await UsuarioModel.findById(reel.idUsuario);
-                if (usuarioDaPublicacao) {
-                    const final = {
-                        ...reel._doc, usuario: {
-                            nome: usuarioDaPublicacao.nome,
-                            avatar: usuarioDaPublicacao.avatar,
-
-
-                        },
-                        isVideo: true,
-                    };
-
-                    result.push(final);
-                }
-            }
-
-
-
-            return res.status(200).json(result.sort((a, b) => b.data - a.data));
+            return res.status(200).json(result.filter(Boolean).sort((a, b) => b.data - a.data));
         }
 
         return res.status(405).json({ erro: 'Método informado não é válido' });
